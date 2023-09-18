@@ -15,7 +15,7 @@ import os
 #import dj_database_url
 from datetime import timedelta
 #from decouple import config 
-
+HOST=False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +29,9 @@ SECRET_KEY = 'django-insecure-arx0#k!vd3!37j6tppj3puqw0prui2iav!(&_(%(#8^(qw%08$
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['erpcons.vitasoftsolutions.com']
+ALLOWED_HOSTS = ['*']
+if HOST:
+    ALLOWED_HOSTS = ['erpcons.vitasoftsolutions.com']
 
 
 # Application definition
@@ -97,22 +98,23 @@ WSGI_APPLICATION = 'erpcons.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'vitasoft_erpcons',
-        'USER': 'vitasoft_erpcons',
-        'PASSWORD': 'VitaSoft2023@@$$web',
-        'HOST': 'localhost',
-        'PORT': '3306',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
- }
+}
+if HOST:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'vitasoft_erpcons',
+            'USER': 'vitasoft_erpcons',
+            'PASSWORD': 'VitaSoft2023@@$$web',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
 # DATABASES = {
 #      'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 #  }
