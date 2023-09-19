@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'globalapp2',
     'loan',
     'hrm',
+    'csvhandler',
     'django_rest_passwordreset',
     'rest_framework_simplejwt',
     'rest_framework',

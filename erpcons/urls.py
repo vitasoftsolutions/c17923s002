@@ -46,6 +46,7 @@ urlpatterns = [
     path('', include('customers.urls')),
     path('', include('owner.urls')),
     path('', include('contructors.urls')),
+    path('', include('csvhandler.urls')),
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     #path('', include('customers.urls')),
     # your urls

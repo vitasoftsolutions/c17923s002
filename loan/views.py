@@ -62,27 +62,32 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         phone_numbers = serializer.initial_data['phone_number']
-        
-        for phone_number in phone_numbers:
-            print(phone_number)
-            print(type(phone_number['role']))
-            PhoneNumber.objects.create(
-                name= phone_number['name'],
-                relation= phone_number['relation'],
-                phone_number= phone_number['phone_number'],
-                status= True,
-                role= Beneficaries.objects.get(id=phone_number['role']),
-                ben_id= Beneficaries.objects.get(id=phone_number['ben_id'])
+        try:
+            for phone_number in phone_numbers:
+                print(phone_number)
+                print(type(phone_number['role']))
+                PhoneNumber.objects.create(
+                    name= phone_number['name'],
+                    relation= phone_number['relation'],
+                    phone_number= phone_number['phone_number'],
+                    status= True,
+                    role= Beneficaries.objects.get(id=phone_number['role']),
+                    ben_id= Beneficaries.objects.get(id=phone_number['ben_id'])
 
-            )
+                )
+                message="Phone number also created"
+
+        except:
+            message="Phone number not created"
         new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
         data=new_data
+        print(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response({
-            "message":"Loan Beneficaries Created",
+            "message":f"Loan Beneficaries Created. {message}",
             "data":serializer.data
         }, status=status.HTTP_201_CREATED, headers=headers)
         #return Response({"message": "data check done"})
