@@ -62,6 +62,7 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         phone_numbers = serializer.initial_data['phone_number']
+        message=""
         try:
             for phone_number in phone_numbers:
                 print(phone_number)
