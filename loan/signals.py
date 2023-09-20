@@ -26,7 +26,10 @@ def log_create_update_action(sender, instance, created,user=None,**kwargs):
     #user = my_thread_local.user
     #print(user)
     message = f"{current_request().user} is {activity} {instance.first_name} {instance.last_name} data"
-    log_action(author_id=current_request().user,giver_id=None,taker_id=None,loan_id=None, activity=message)
+    try:
+        log_action(author_id=current_request().user,giver_id=None,taker_id=None,loan_id=None, activity=message)
+    except: 
+        pass
 
 @receiver(pre_delete, sender=LoanBeneficaries)
 def log_delete_action(sender, instance, **kwargs):

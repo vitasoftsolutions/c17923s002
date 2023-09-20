@@ -98,9 +98,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.apps import apps
 import csv
-import io
+import os
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import FileUploadParser
+
+from csvhandler.models import UploadCsv
+from csvhandler.serializers import UploadCsvSerializer
+from rest_framework import generics
 class ExportBooksToCSV(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -150,3 +154,91 @@ class ImportBooksFromCSV(APIView):
         # For example, you can parse it, update the database, etc.
         # Here, we simply return the CSV data as a JSON response
         return JsonResponse({'csv_data': csv_data})
+    
+
+class UploadCsvCreateView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = UploadCsv.objects.all()
+    serializer_class = UploadCsvSerializer
+    def create(self, request, *args, **kwargs):
+
+        # Implement your custom logic here
+        # You can access request.data to get the JSON data
+        # You can also access self.serializer_class to work with the serializer
+
+        # Example: Extract and print the JSON data
+        json_data = request.data
+        
+
+        # You can add your custom logic here
+        # For example, you can validate, process, or modify the data before saving
+
+        serializer = self.get_serializer(data=json_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        #print(serializer.data['file'])
+        # Split the URL by '/'
+        url=serializer.data['file']
+        parts = url.split('/')
+
+        # Remove the first three parts and keep the rest
+        remaining_parts = parts[3:]
+
+        # Join the remaining parts back together to reconstruct the URL
+        result_url = '/'.join(remaining_parts)
+
+        #print(result_url)
+        csv_file_path = result_url
+        model_name = serializer.data['model_name']
+        app_label = serializer.data['app_label']
+        model_class = apps.get_model(app_label=app_label, model_name=model_name)
+        fields = [field for field in model_class._meta.get_fields() if not field.is_relation]
+        field_names = [field.name for field in fields]
+        field_names_filtered = [field for field in field_names if field != 'id']
+        #print(field_names)
+        with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
+            csv_reader = csv.reader(file)
+
+            for i, row in enumerate(csv_reader):
+                if i == 0:
+                    continue
+                # Print each row
+                user_data = dict(zip(field_names_filtered,row[1:]))
+                user = model_class (**user_data)
+                user.save()
+        print(user_data)
+        UploadCsv.objects.all().delete()
+        
+
+        # Define the directory path
+        directory_path = 'upload/csv'  # Replace with the actual path to your directory
+
+        # Get a list of all files in the directory
+        file_list = os.listdir(directory_path)
+
+        # Iterate through the file list and delete each file
+        for file_name in file_list:
+            file_path = os.path.join(directory_path, file_name)
+            
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
+        # Optionally, you can print a message to confirm that the files have been deleted
+        print(f"All files in '{directory_path}' have been deleted.")
+
+        # csv_file_url =serializer.data['file']
+        # response = request.get(csv_file_url)
+        # if response.status_code == 200:
+        # # Process the CSV content
+        #     content = response.text
+        #     csv_reader = csv.DictReader(content.splitlines())  # Assuming the CSV has headers
+
+        #     for row in csv_reader:
+        #         # Access data for each row using row['column_name']
+        #         print(row)
+        #         # ... (access other columns as needed)
+
+        #         # Process the data (e.g., save to the
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

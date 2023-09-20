@@ -12,5 +12,6 @@ urlpatterns = [
     path('export-csv/', views.ExportBooksToCSV.as_view(), name='export-csv'),
     path('export-csv/upload/', views.ExportBooksToCSV.as_view(), name='export-csv-upload'),  # New URL for CSV upload
     path('import-csv/', views.ImportBooksFromCSV.as_view(), name='import-csv'),  # New import URL
+    path('upload-csv/', views.UploadCsvCreateView.as_view(), name='upload-csv-create'),
 ]
 urlpatterns+= router.urls
