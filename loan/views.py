@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets,parsers
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from globalapp2.ed import encode_jwt
@@ -26,6 +26,7 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = LoanBenfcaiesFilter  # Use the custom filter class
+    parser_classes = [parsers.MultiPartParser]
     @action(detail=True, methods=['post'])
     def change_status(self, request, pk=None):
         item = self.get_object()
@@ -75,7 +76,10 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
         return instance  # Returning the instance after saving
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        phone_numbers = serializer.initial_data['phone_number']
+        try:
+            phone_numbers = serializer.initial_data['phone_number']
+        except:
+            phone_numbers = []
         new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
         data=new_data
         #print(data)
