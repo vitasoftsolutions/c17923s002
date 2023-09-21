@@ -48,12 +48,37 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
             print(ordering)
         except:
             pass
+        try:
+            phone = self.request.query_params.get('phone')
+            ben_ids_queryset = PhoneNumber.objects.filter(phone_number=phone)
+            ben_id_list = []
+            for ben_id_obj in ben_ids_queryset:
+                ben_id_list.append(ben_id_obj.ben_id)
+            print(ben_id_list)
+            unique_beneficiaries_set = set()
+
+            # Create a new list to store the unique objects in order
+            unique_beneficiaries_list = []
+
+            # Iterate through the original list
+            for beneficiary in ben_id_list:
+                # Check if the object is not in the set (i.e., it's unique)
+                if beneficiary not in unique_beneficiaries_set:
+                    # Add the unique object to the set and the new list
+                    unique_beneficiaries_set.add(str(beneficiary))
+                    unique_beneficiaries_list.append(str(beneficiary))
+            print(list(unique_beneficiaries_set))
+            unique_beneficiaries_set=list(unique_beneficiaries_set)
+        except:
+            pass
         queryset = self.filter_queryset(self.get_queryset())
         if ordering == "asc":
             queryset = queryset.order_by('first_name')
         elif ordering == "dsc":
             queryset = queryset.order_by('-first_name')
-        
+        if  unique_beneficiaries_set:
+
+            queryset=LoanBeneficaries.objects.filter(first_name=unique_beneficiaries_set[0])
 
         page = self.paginate_queryset(queryset)
 
