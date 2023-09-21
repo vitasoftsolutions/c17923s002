@@ -2,7 +2,7 @@
 from rest_framework import filters
 from django_filters import rest_framework as django_filters
 from globalapp2.models import PhoneNumber
-
+from django.utils import timezone
 from loan.models import LoanBeneficaries, LoanInstallment, LoanLog, LoanTransactions
 
 class LoanBenfcaiesFilter(django_filters.FilterSet):
@@ -11,10 +11,20 @@ class LoanBenfcaiesFilter(django_filters.FilterSet):
     last_name = django_filters.CharFilter(lookup_expr='icontains')
     email = django_filters.CharFilter(lookup_expr='icontains')
     giver_name = django_filters.CharFilter(lookup_expr='icontains')
-    NID_number = django_filters.CharFilter(lookup_expr='icontains')
+    nid_number = django_filters.CharFilter(lookup_expr='icontains')
+    created_at = django_filters.DateFilter(
+        field_name='created_at',
+        lookup_expr='date__exact',
+        #widget=django_filters.widgets.DateInput(attrs={'type': 'date'}),
+        #label='Created At (YYYY-MM-DD)',
+    )
     class Meta:
         model = LoanBeneficaries
-        fields = ['first_name','last_name','email','giver_name','NID_number']  # Add more fields if needed
+        fields = ['first_name','last_name','email','giver_name','nid_number']  # Add more fields if needed
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set the initial value for the 'created_at' filter
+        self.filters['created_at'].extra['initial'] = timezone.datetime(2023, 8, 11, 18, 3, 8)
 
 
 class LoanTransactionsFilter(django_filters.FilterSet):

@@ -42,7 +42,18 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
         return Response({"message": "Loan Beneficaries deleted. But you can recover your data"})
     def list(self, request, *args, **kwargs):
         # Get the paginated queryset
+        try:
+            ordering = self.request.query_params.get('order')
+            print(ordering)
+        except:
+            pass
         queryset = self.filter_queryset(self.get_queryset())
+        if ordering == "asc":
+            queryset = queryset.order_by('first_name')
+        elif ordering == "dsc":
+            queryset = queryset.order_by('-first_name')
+        
+
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -59,33 +70,40 @@ class AllLoanBeneficaries(viewsets.ModelViewSet):
         # Return the serialized data without pagination
         token = encode_jwt({"data":serializer.data})
         return Response({"token":token})
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        return instance  # Returning the instance after saving
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         phone_numbers = serializer.initial_data['phone_number']
-        message=""
-        try:
-            for phone_number in phone_numbers:
-                print(phone_number)
-                print(type(phone_number['role']))
-                PhoneNumber.objects.create(
-                    name= phone_number['name'],
-                    relation= phone_number['relation'],
-                    phone_number= phone_number['phone_number'],
-                    status= True,
-                    role= Beneficaries.objects.get(id=phone_number['role']),
-                    ben_id= Beneficaries.objects.get(id=phone_number['ben_id'])
-
-                )
-                message="Phone number also created"
-
-        except:
-            message="Phone number not created"
         new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
         data=new_data
-        print(data)
+        #print(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        id=self.perform_create(serializer)
+        id=int(id.id)
+        
+        message=""
+        print(phone_numbers)
+       
+        for phone_number in phone_numbers:
+            #print(phone_number)
+            #print(type(phone_number['role']))
+            PhoneNumber.objects.create(
+                name= phone_number['name'],
+                relation= phone_number['relation'],
+                phone_number= phone_number['phone_number'],
+                status= True,
+                role= Beneficaries.objects.get(id=id),
+                ben_id= Beneficaries.objects.get(id=id)
+
+            )
+            #message="Phone number also created"
+
+        
+            #message="Phone number not created"
+        #remove from here
         headers = self.get_success_headers(serializer.data)
         return Response({
             "message":f"Loan Beneficaries Created. {message}",
