@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,Group
 from django.db import models
 from datetime import datetime
 class MyUserManager(BaseUserManager):
@@ -76,6 +76,14 @@ class Employee(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+    roles = models.ManyToManyField(
+        Group,
+        verbose_name='roles',
+        blank=True,
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+        related_name='employee_set',
+        related_query_name='employee',
+    )
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'

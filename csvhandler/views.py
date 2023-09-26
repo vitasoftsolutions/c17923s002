@@ -101,7 +101,7 @@ import csv
 import os
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import FileUploadParser
-
+from rest_framework import viewsets,parsers
 from csvhandler.models import UploadCsv
 from csvhandler.serializers import UploadCsvSerializer
 from rest_framework import generics
@@ -161,6 +161,7 @@ class UploadCsvCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = UploadCsv.objects.all()
     serializer_class = UploadCsvSerializer
+    parser_classes = [parsers.MultiPartParser]
     def create(self, request, *args, **kwargs):
 
         # Implement your custom logic here
