@@ -5,6 +5,7 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+        depth=2
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission

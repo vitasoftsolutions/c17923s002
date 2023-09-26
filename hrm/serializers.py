@@ -13,6 +13,7 @@ class LeavesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leaves
         fields = '__all__'
+        
 
 class SalariesSerializer(serializers.ModelSerializer):
     class Meta:
