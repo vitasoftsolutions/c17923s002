@@ -51,9 +51,19 @@ class PhoneFilter(django_filters.FilterSet):
     phone_number =django_filters.CharFilter(lookup_expr='icontains')
     name= django_filters.CharFilter(lookup_expr='icontains')
     relation = django_filters.CharFilter(lookup_expr='icontains')
+    created_at = django_filters.DateFilter(
+        field_name='created_at',
+        lookup_expr='date__exact',
+        #widget=django_filters.widgets.DateInput(attrs={'type': 'date'}),
+        #label='Created At (YYYY-MM-DD)',
+    )
     class Meta:
         model = PhoneNumber
         fields = ['role__first_name','role__last_name','ben_id__first_name','ben_id__last_name','phone_number','name','relation']  # Add more fields if needed
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set the initial value for the 'created_at' filter
+        self.filters['created_at'].extra['initial'] = timezone.datetime(2023, 8, 11, 18, 3, 8)
 
 
         #Loan Installment Filter

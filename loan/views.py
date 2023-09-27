@@ -176,6 +176,33 @@ class PhoneViews(BaseViews):
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = PhoneFilter # Use the custom filter class
+    def list(self, request, *args, **kwargs):
+        # Get the paginated queryset
+        try:
+            ordering = self.request.query_params.get('order')
+            print(ordering)
+        except:
+            pass
+        queryset = self.filter_queryset(self.get_queryset())
+        if ordering == "asc":
+            queryset = queryset.order_by('name')
+        elif ordering == "dsc":
+            queryset = queryset.order_by('-name')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            # Serialize the paginated data
+            serializer = self.get_serializer(page, many=True)
+
+            # Return the paginated response
+            token = encode_jwt({"data":serializer.data})
+            return self.get_paginated_response({"token":token})
+            #return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Return the serialized data without pagination
+        token = encode_jwt({"data":serializer.data})
+        return Response({"token":token})
+        #return Response(serializer.data)
 
 class LoanInstallmentViews(BaseViews):
     authentication_classes = [JWTAuthentication]
