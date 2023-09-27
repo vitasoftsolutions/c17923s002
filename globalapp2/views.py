@@ -133,12 +133,13 @@ class BaseBeneficaries(BaseViews):
         return instance  # Returning the instance after saving
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        try:
-            phone_numbers = serializer.initial_data['phone_number']
-            test_numbers="got number"
-        except:
-            phone_numbers = []
-            test_numbers="number not found"
+        phone_numbers = serializer.initial_data['phone_number']
+        # try:
+        #     phone_numbers = serializer.initial_data['phone_number']
+        #     test_numbers="got number"
+        # except:
+        #     phone_numbers = []
+        #     test_numbers="number not found"
         new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
         data=new_data
         #print(data)
