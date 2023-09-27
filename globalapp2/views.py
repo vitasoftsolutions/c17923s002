@@ -72,7 +72,7 @@ class BaseBeneficaries(BaseViews):
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = None  # Use the custom filter class
-    parser_classes = [parsers.MultiPartParser]
+    #parser_classes = [parsers.MultiPartParser]
     def list(self, request, *args, **kwargs):
         # Get the paginated queryset
         try:
@@ -134,13 +134,14 @@ class BaseBeneficaries(BaseViews):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         test_data = self.get_serializer(data=request.data)
-        phone_numbers = serializer.initial_data.getlist('phone_number')
-        # try:
-        #     phone_numbers = serializer.initial_data['phone_number']
-        #     test_numbers="got number"
-        # except:
-        #     phone_numbers = []
-        #     test_numbers="number not found"
+        #phone_numbers = serializer.initial_data.getlist('phone_number')
+        print(serializer.initial_data)
+        try:
+            phone_numbers = serializer.initial_data['phone_number']
+            test_numbers="got number"
+        except:
+            phone_numbers = []
+            test_numbers="number not found"
         new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
         data=new_data
         #print(data)
@@ -173,7 +174,6 @@ class BaseBeneficaries(BaseViews):
         return Response({
             "message":f"Beneficaries Created. {message}",
             "data":serializer.data,
-            "phone_numbers":test_data.initial_data
 
         }, status=status.HTTP_201_CREATED, headers=headers)
         #return Response({"message": "data check done"})
