@@ -172,7 +172,7 @@ class BaseBeneficaries(BaseViews):
         return Response({
             "message":f"Beneficaries Created. {message}",
             "data":serializer.data,
-            "phone_numbers":test_numbers
+            "phone_numbers":phone_numbers
 
         }, status=status.HTTP_201_CREATED, headers=headers)
         #return Response({"message": "data check done"})
