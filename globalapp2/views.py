@@ -133,7 +133,7 @@ class BaseBeneficaries(BaseViews):
         return instance  # Returning the instance after saving
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        phone_numbers = serializer.initial_data['phone_number']
+        phone_numbers = serializer.initial_data.getlist('phone_number')
         # try:
         #     phone_numbers = serializer.initial_data['phone_number']
         #     test_numbers="got number"
