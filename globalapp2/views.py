@@ -72,7 +72,7 @@ class BaseBeneficaries(BaseViews):
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = None  # Use the custom filter class
-    #parser_classes = [parsers.MultiPartParser]
+    parser_classes = [parsers.MultiPartParser]
     def list(self, request, *args, **kwargs):
         # Get the paginated queryset
         try:
