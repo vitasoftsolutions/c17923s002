@@ -38,6 +38,7 @@ if HOST:
 
 INSTALLED_APPS = [
     'users',
+    'suppliers',
     'customers',
     'contructors',
     'owner',
