@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from users.models import Employee, PhoneNumber
+from globalapp2.models import PhoneNumber
+from users.models import Employee
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import AccessToken
@@ -104,28 +105,77 @@ class AllEmployeeView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,IsStaff]
     serializer_class = AllUserSerializer
     queryset = Employee.objects.all()
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     #phone number create code:
+    #     phone_numbers = serializer.initial_data['phone_number']
+    #     phone_ids=[]
+    #     for phone_number in phone_numbers:
+    #         try:
+    #             phone_id = PhoneNumber.objects.get(phone_number=phone_number)
+    #             phone_ids.append(phone_id.pk)
+    #         except:
+    #             phone_id = PhoneNumber.objects.create(
+    #                 phone_number=phone_number
+    #             )
+    #             phone_ids.append(phone_id.pk)
+        
+    #     serializer.initial_data['phone_number']=phone_ids
+    #     data=serializer.initial_data
+    #     serializer = self.get_serializer(data=data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        return instance  # Returning the instance after saving
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        #phone number create code:
-        phone_numbers = serializer.initial_data['phone_number']
-        phone_ids=[]
-        for phone_number in phone_numbers:
-            try:
-                phone_id = PhoneNumber.objects.get(phone_number=phone_number)
-                phone_ids.append(phone_id.pk)
-            except:
-                phone_id = PhoneNumber.objects.create(
-                    phone_number=phone_number
-                )
-                phone_ids.append(phone_id.pk)
-        
-        serializer.initial_data['phone_number']=phone_ids
-        data=serializer.initial_data
+        test_data = self.get_serializer(data=request.data)
+        #phone_numbers = serializer.initial_data.getlist('phone_number')
+        print(serializer.initial_data)
+        try:
+            phone_numbers = serializer.initial_data['phone_number']
+            test_numbers="got number"
+        except:
+            phone_numbers = []
+            test_numbers="number not found"
+        new_data = {key: value for key, value in serializer.initial_data.items() if key != "phone_number"}
+        data=new_data
+        #print(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        id=self.perform_create(serializer)
+        id=int(id.id)
+        
+        message=""
+        print(phone_numbers)
+       
+        for phone_number in phone_numbers:
+            #print(phone_number)
+            #print(type(phone_number['role']))
+            PhoneNumber.objects.create(
+                name= phone_number['name'],
+                relation= phone_number['relation'],
+                phone_number= phone_number['phone_number'],
+                status= True,
+                role= Employee.objects.get(id=id),
+                ben_id= Employee.objects.get(id=id)
+
+            )
+            #message="Phone number also created"
+
+        
+            #message="Phone number not created"
+        #remove from here
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({
+            "message":f"Employee Created. {message}",
+            "data":serializer.data,
+
+        }, status=status.HTTP_201_CREATED, headers=headers)
+        #return Response({"message": "data check done"})
 
 
 

@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
-from .models import Employee, PhoneNumber
+from .models import Employee
 from .forms import UserChangeForm, UserCreationForm
 
 class UserAdmin(BaseUserAdmin):
@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('email', 'is_admin','is_staff','first_name','last_name','status','joined_date')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'password','first_name','last_name','username','phone_number','status','joined_date')}),
+        (None, {'fields': ('email', 'password','first_name','last_name','username','status','joined_date')}),
         ('Permissions', {'fields': ('is_admin','is_staff','roles')}),
         ('Verifications', {'fields': ('is_verified',)}),
     )
@@ -30,5 +30,5 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 admin.site.register(Employee, UserAdmin)
-admin.site.register(PhoneNumber)
+#admin.site.register(PhoneNumber)
 #admin.site.unregister(Group)
