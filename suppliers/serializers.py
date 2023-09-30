@@ -4,7 +4,7 @@ from globalapp2.models import PhoneNumber
 from loan.serializers import PhoneSerializer
 
 
-from suppliers.models import SupplierBeneficaries
+from suppliers.models import SupplierBeneficaries,Metarials
 
 
 class SupliersBeneficariesSerializer(serializers.ModelSerializer):
@@ -12,4 +12,8 @@ class SupliersBeneficariesSerializer(serializers.ModelSerializer):
     phone_number = PhoneSerializer(many=True,read_only = True)
     class Meta:
         model = SupplierBeneficaries
+        fields = '__all__'
+class MetarialsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Metarials
         fields = '__all__'
