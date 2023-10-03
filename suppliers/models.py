@@ -16,3 +16,6 @@ class Metarials(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+
+class TestBeneficaries(Beneficaries):
+    pass
