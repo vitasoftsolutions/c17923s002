@@ -70,3 +70,23 @@ class PhoneNumber(models.Model):
     is_deleted = models.BooleanField(default=False,null=True,blank=True)
     def __str__(self):
         return f"{self.phone_number}"
+    
+
+
+class CommonModel(models.Model):
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+
+class AppLabel(models.Model):
+    name = models.CharField(max_length=20)
+    def __str__(self):
+        return f"{self.name}"
+    
+
+class Types(models.Model):
+    app_label = models.ForeignKey(AppLabel,on_delete=models.CASCADE,related_name='type_label',blank=True,null=True)
+    name = models.CharField(max_length=20)
+    def __str__(self):
+        return f"{self.name}"
+
