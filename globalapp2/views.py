@@ -110,7 +110,7 @@ class BaseBeneficaries(BaseViews):
             queryset = queryset.order_by('-first_name')
         if  unique_beneficiaries_set:
 
-            queryset=LoanBeneficaries.objects.filter(first_name=unique_beneficiaries_set[0])
+            queryset=self.model_name.objects.filter(first_name=unique_beneficiaries_set[0])
 
         page = self.paginate_queryset(queryset)
 

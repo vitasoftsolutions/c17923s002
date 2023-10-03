@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from globalapp2.models import PhoneNumber
+
+
 from users.models import Employee
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,8 +16,13 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework_simplejwt.views import TokenObtainPairView
-
- #############custom permission class#########
+from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
+from globalapp2.ed import encode_jwt
+from rest_framework import filters
+from django_filters import rest_framework as django_filters
+from users.filters import EmployeeFilter
+#from globalapp2.views import BaseBeneficaries
+############################################# PERMISSION ############################################
 class IsStaff(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated and request.user.is_staff)
@@ -24,9 +31,6 @@ class IsStaff(permissions.BasePermission):
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated and request.user.is_admin)
-
-
-
 
 # Create your views here.
 class RegisterUser(APIView):
@@ -99,12 +103,22 @@ class EmployeeView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-  
+    
+
+# class AllEmployeeView(BaseBeneficaries):
+#     serializer_class = AllUserSerializer
+#     queryset = Employee.objects.all()
+#     #filterset_class = CustomerBenificaiesFilter
+#     model_name = Employee
+  ############################################################### All Employee Previous code ##############################################
 class AllEmployeeView(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated,IsStaff]
     serializer_class = AllUserSerializer
+    pagination_class = LimitOffsetPagination
     queryset = Employee.objects.all()
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    filterset_class = EmployeeFilter  # Use the custom filter class
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
     #     #phone number create code:
@@ -127,6 +141,61 @@ class AllEmployeeView(viewsets.ModelViewSet):
     #     self.perform_create(serializer)
     #     headers = self.get_success_headers(serializer.data)
     #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def list(self, request, *args, **kwargs):
+        # Get the paginated queryset
+        try:
+            ordering = self.request.query_params.get('order')
+            print(ordering)
+        except:
+            pass
+        try:
+            phone = self.request.query_params.get('phone')
+            ben_ids_queryset = PhoneNumber.objects.filter(phone_number=phone)
+            ben_id_list = []
+            for ben_id_obj in ben_ids_queryset:
+                ben_id_list.append(ben_id_obj.ben_id)
+            print(ben_id_list)
+            unique_beneficiaries_set = set()
+
+            # Create a new list to store the unique objects in order
+            unique_beneficiaries_list = []
+
+            # Iterate through the original list
+            for beneficiary in ben_id_list:
+                # Check if the object is not in the set (i.e., it's unique)
+                if beneficiary not in unique_beneficiaries_set:
+                    # Add the unique object to the set and the new list
+                    unique_beneficiaries_set.add(str(beneficiary))
+                    unique_beneficiaries_list.append(str(beneficiary))
+            print(list(unique_beneficiaries_set))
+            unique_beneficiaries_set=list(unique_beneficiaries_set)
+        except:
+            pass
+        queryset = self.filter_queryset(self.get_queryset())
+        if ordering == "asc":
+            queryset = queryset.order_by('first_name')
+        elif ordering == "dsc":
+            queryset = queryset.order_by('-first_name')
+        if  unique_beneficiaries_set:
+
+            queryset=Employee.objects.filter(first_name=unique_beneficiaries_set[0])
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            # Serialize the paginated data
+            serializer = self.get_serializer(page, many=True)
+
+            # Return the paginated response
+            token = encode_jwt({"data":serializer.data})
+            return self.get_paginated_response({"token":token})
+
+        # If there is no pagination, serialize the entire queryset
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Return the serialized data without pagination
+        token = encode_jwt({"data":serializer.data})
+        return Response({"token":token})
     def perform_create(self, serializer):
         instance = serializer.save()
         return instance  # Returning the instance after saving
@@ -179,5 +248,37 @@ class AllEmployeeView(viewsets.ModelViewSet):
 
 
 
+# class CustomTokenObtainPairView(TokenObtainPairView):
+#     serializer_class = CustomTokenObtainPairSerializer
+
+    
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.response import Response
+from rest_framework import status
+
 class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        print(response.data['access'])
+        token=response.data['access']
+        # if response.status_code == status.HTTP_200_OK:
+        #     user = self.user  # Assuming you have a 'user' attribute in your custom authentication logic
+        #     if user and user.is_authenticated:
+        #         # Customize the response to include user data
+        #         user_data = {
+        #             "id": user.id,
+        #             "email": user.email,
+        #             "username": user.username,
+        #             # Add more fields as needed
+        #         }
+        #         response.data["user"] = user_data
+        payload = AccessToken(token).payload
+        user_id = payload.get('user_id')
+        print(user_id)
+        user = Employee.objects.filter(id=user_id)
+        serializer = AllUserSerializer(user, many=True)
+        print(serializer.data)
+        response.data["user"] = encode_jwt({"data":serializer.data})
+        return response
+
+
