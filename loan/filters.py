@@ -49,7 +49,8 @@ class PhoneFilter(django_filters.FilterSet):
     ben_id__first_name = django_filters.CharFilter(lookup_expr='icontains')
     ben_id__last_name = django_filters.CharFilter(lookup_expr='icontains')
     phone_number =django_filters.CharFilter(lookup_expr='icontains')
-    name= django_filters.CharFilter(lookup_expr='icontains')
+    first_name= django_filters.CharFilter(lookup_expr='icontains')
+    last_name= django_filters.CharFilter(lookup_expr='icontains')
     relation = django_filters.CharFilter(lookup_expr='icontains')
     created_at = django_filters.DateFilter(
         field_name='created_at',
@@ -59,7 +60,7 @@ class PhoneFilter(django_filters.FilterSet):
     )
     class Meta:
         model = PhoneNumber
-        fields = ['role__first_name','role__last_name','ben_id__first_name','ben_id__last_name','phone_number','name','relation']  # Add more fields if needed
+        fields = ['role__first_name','role__last_name','ben_id__first_name','ben_id__last_name','phone_number','first_name','last_name','relation']  # Add more fields if needed
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set the initial value for the 'created_at' filter
