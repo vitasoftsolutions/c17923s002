@@ -225,12 +225,13 @@ class AllEmployeeView(viewsets.ModelViewSet):
             #print(phone_number)
             #print(type(phone_number['role']))
             PhoneNumber.objects.create(
-                name= phone_number['name'],
+                first_name= phone_number['first_name'],
+                last_name = phone_number['last_name'],
                 relation= phone_number['relation'],
                 phone_number= phone_number['phone_number'],
                 status= True,
-                role= Employee.objects.get(id=id),
-                ben_id= Employee.objects.get(id=id)
+                employee_role= Employee.objects.get(id=id),
+                employee_id= Employee.objects.get(id=id)
 
             )
             #message="Phone number also created"

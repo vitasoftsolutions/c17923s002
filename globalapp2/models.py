@@ -61,6 +61,8 @@ class PhoneNumber(models.Model):
     #Beneficiaries = import_string('globalapp2.models.Beneficiaries')
     role = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='role',blank=True,null=True)
     ben_id = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
+    employee_role = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='role',blank=True,null=True)
+    employee_id = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
     first_name=models.CharField(max_length=100,blank=True,null=True)
     last_name=models.CharField(max_length=100,blank=True,null=True)
     relation= models.CharField(max_length=100,blank=True,null=True)
