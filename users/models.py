@@ -71,7 +71,8 @@ class Employee(AbstractBaseUser):
         
     )
     
-    status = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    #status = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    status = models.BooleanField(default=True,blank=True,null=True,)
     joined_date= models.DateTimeField(blank=True,null=True,default=datetime.now())
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
