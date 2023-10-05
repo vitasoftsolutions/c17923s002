@@ -51,6 +51,8 @@ urlpatterns = [
     path('', include('suppliers.urls')),
     path('', include('profileapp.urls')),
     path('', include('projects.urls')),
+    path('', include('accounts.urls')),
+    path('', include('renter.urls')),
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     #path('', include('customers.urls')),
     # your urls

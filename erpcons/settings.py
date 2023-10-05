@@ -37,6 +37,8 @@ if HOST:
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
+    'renter',
     'projects',
     'profileapp',
     'users',
