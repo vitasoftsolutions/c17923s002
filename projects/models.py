@@ -50,6 +50,31 @@ class projectProgress(CommonModel):
 
 class propertyModels(CommonModel):
     code = models.CharField(max_length=10)
+    project_id = models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,blank=True,null=True)
+    type = models.ForeignKey(Types,on_delete=models.CASCADE,blank=True,null=True)
+    side = models.CharField(max_length=50,null=True,blank=True)
+    size = models.FloatField(null=True,blank=True)
+    def __str__(self):
+        return f"{self.code }"
+
+class UnitModels(CommonModel):
+    project_id = models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,blank=True,null=True)
+    unit_floor = models.CharField(max_length=50,null=True,blank=True)
+    unit_property = models.ManyToManyField(propertyModels,null=True,blank=True)
+    OPTION_a = 'Commarcial'
+    OPTION_b = 'Ressidential'
+    
+    CHOICES2 = (
+        (OPTION_a, 'Commarcial'),
+        (OPTION_b, 'Ressidential'),
+        
+        
+    )
+    
+    type = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    def __str__(self):
+        return f"{self.project_id.name}"
+
 
 
 class propertyPurchase(CommonModel):
