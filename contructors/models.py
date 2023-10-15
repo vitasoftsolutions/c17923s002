@@ -1,6 +1,6 @@
 from django.db import models
 
-from globalapp2.models import Beneficaries, CommonModel, IntroInfo
+from globalapp2.models import Beneficaries, CommonModel, IntroInfo, Typess
 from projects.models import ProjectInfo
 
 # Create your models here.
@@ -33,5 +33,6 @@ class ContractorPaymnet(CommonModel):
     contructor_id = models.ForeignKey(ContructorsBeneficaries,on_delete=models.CASCADE,blank=True,null=True)
     worker = models.IntegerField()
     payment = models.FloatField()
+    payment_type = models.ForeignKey(Typess,on_delete=models.CASCADE,blank=True,null=True)
     def __str__(self):
         return f"{self.project_id.name}"

@@ -80,14 +80,14 @@ class CommonModel(models.Model):
     created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
     is_deleted = models.BooleanField(default=False,null=True,blank=True)
 
-class AppLabel(models.Model):
+class AppLabels(CommonModel):
     name = models.CharField(max_length=20)
     def __str__(self):
         return f"{self.name}"
     
 
-class Types(models.Model):
-    app_label = models.ForeignKey(AppLabel,on_delete=models.CASCADE,related_name='type_label',blank=True,null=True)
+class Typess(CommonModel):
+    app_label = models.ForeignKey(AppLabels,on_delete=models.CASCADE,related_name='type_label',blank=True,null=True)
     name = models.CharField(max_length=20)
     def __str__(self):
         return f"{self.name}"

@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter,SimpleRouter
 
 
 router = SimpleRouter()
-#router.register(r'customers-beneficaries',views.CustomerBeneficariesViews,basename="customers-beneficaries")
+router.register(r'business-profile',views.ProfileViews,basename="business-profile")
 
 urlpatterns = [
    

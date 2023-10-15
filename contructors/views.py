@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from contructors.models import ContractorGarrentor, ContructorsBeneficaries
-from contructors.serializers import ContructorsBeneficariesSerializer, ContructorsGarrentorSerializer
+from contructors.models import AssignContractor, ContractorGarrentor, ContractorPaymnet, ContructorsBeneficaries
+from contructors.serializers import AssignContractorSerializer, ContractorPaymentSerializer, ContructorsBeneficariesSerializer, ContructorsGarrentorSerializer
 from customers.models import CustomerBeneficaries
 from customers.serializers import CustomerBeneficariesSerializer
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
@@ -53,11 +53,33 @@ class ContructorBeneficariesViews(BaseBeneficaries):
 #         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class ContractorGarrentorViews(BaseViews):
-    #authentication_classes = [JWTAuthentication]
-    #permission_classes = [permissions.IsAuthenticated,IsStaff]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
     serializer_class = ContructorsGarrentorSerializer
     queryset = ContractorGarrentor
     model_name=ContractorGarrentor
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     filterset_class = ContructorGarrentorFilter # Use the custom filter class
+
+
+class AssignContractorViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = AssignContractorSerializer
+    queryset = AssignContractor
+    model_name=AssignContractor
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = ContructorGarrentorFilter # Use the custom filter class
+
+class ContractorPaymentViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = ContractorPaymentSerializer
+    queryset = ContractorPaymnet
+    model_name=ContractorPaymnet
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = ContructorGarrentorFilter # Use the custom filter class
+

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from contructors.models import ContractorGarrentor, ContructorsBeneficaries
+from contructors.models import AssignContractor, ContractorGarrentor, ContractorPaymnet, ContructorsBeneficaries
 from loan.serializers import PhoneSerializer
 
 
@@ -11,4 +11,14 @@ class ContructorsBeneficariesSerializer(serializers.ModelSerializer):
 class ContructorsGarrentorSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContractorGarrentor
+        fields = '__all__'
+
+class AssignContractorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssignContractor
+        fields = '__all__'
+
+class ContractorPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContractorPaymnet
         fields = '__all__'

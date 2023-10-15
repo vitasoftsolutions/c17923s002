@@ -5,8 +5,8 @@ from rest_framework import viewsets,parsers
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 
-from globalapp2.models import Beneficaries, PhoneNumber
-from globalapp2.serializers import GroupSerializer, PermissionSerializer
+from globalapp2.models import AppLabels, Beneficaries, PhoneNumber, Typess
+from globalapp2.serializers import AppLabelSerializer, GroupSerializer, PermissionSerializer, TypesSerializer
 from django.contrib.auth.models import Group,Permission
 from loan.models import LoanBeneficaries, LoanInstallment, LoanLog, LoanTransactions
 from loan.serializers import LoanBeneficariesSerializer, LoanInstallmenttionSerializer, LoanLogSerializer, LoanTransactionSerializer, PhoneSerializer
@@ -192,6 +192,32 @@ class PermissionViews(mixins.ListModelMixin,viewsets.GenericViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
     pagination_class = None
+
+
+
+class AppLabelViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = AppLabelSerializer
+    queryset = AppLabels
+    model_name=AppLabels
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = LoanInstallmentFilter # Use the custom filter class
+
+class TypeViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = TypesSerializer
+    queryset = Typess
+    model_name=Typess
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = LoanInstallmentFilter # Use the custom filter class
+    def get_queryset(self):
+        label_name = self.request.query_params.get('label_name')
+        #print(self.model_name.objects.filter(is_deleted=False,project_id__id=id))
+        return self.model_name.objects.filter(is_deleted=False,app_label__name=label_name)
 
 
 

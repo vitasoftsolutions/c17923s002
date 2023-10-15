@@ -1,13 +1,13 @@
 from django.db import models
 from customers.models import CustomerBeneficaries
 
-from globalapp2.models import CommonModel, Types
+from globalapp2.models import CommonModel, Typess
 from users.models import Employee
 
 # Create your models here.
 class ProjectInfo(CommonModel):
     name= models.CharField(max_length=100,blank=True,null=True)
-    project_type = models.ForeignKey(Types,on_delete=models.CASCADE,related_name='project_type',blank=True,null=True)
+    project_type = models.ForeignKey(Typess,on_delete=models.CASCADE,related_name='project_type',blank=True,null=True)
     address = models.TextField()
     area= models.CharField(max_length=20)
     division = models.CharField(max_length=20)
@@ -18,7 +18,7 @@ class ProjectInfo(CommonModel):
     police_station = models.CharField(max_length=20)
     zip_code = models.CharField(max_length=20)
     project_size = models.FloatField()
-    project_size_type = models.ForeignKey(Types,on_delete=models.CASCADE,related_name='project_size_type',blank=True,null=True)
+    project_size_type = models.ForeignKey(Typess,on_delete=models.CASCADE,related_name='project_size_type',blank=True,null=True)
     basement_no = models.IntegerField()
     number_of_elevator = models.IntegerField()
     number_of_stairs = models.IntegerField()
@@ -51,7 +51,7 @@ class projectProgress(CommonModel):
 class propertyModels(CommonModel):
     code = models.CharField(max_length=10)
     project_id = models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,blank=True,null=True)
-    type = models.ForeignKey(Types,on_delete=models.CASCADE,blank=True,null=True)
+    type = models.ForeignKey(Typess,on_delete=models.CASCADE,blank=True,null=True)
     side = models.CharField(max_length=50,null=True,blank=True)
     size = models.FloatField(null=True,blank=True)
     def __str__(self):
@@ -83,7 +83,7 @@ class propertyPurchase(CommonModel):
     customer_id = models.ForeignKey(CustomerBeneficaries,on_delete=models.CASCADE,blank=True,null=True)
     author_id = models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
     amount = models.FloatField()
-    payment_type = models.ForeignKey(Types,on_delete=models.CASCADE,blank=True,null=True)
+    payment_type = models.ForeignKey(Typess,on_delete=models.CASCADE,blank=True,null=True)
     down_payment = models.FloatField()
     installment = models.IntegerField()
     facilities = models.JSONField()
@@ -107,7 +107,7 @@ class propertyInstallment(CommonModel):
 class ExpenseByProperty(CommonModel):
     property_id = models.ForeignKey(propertyModels,on_delete=models.CASCADE,blank=True,null=True)
     reason = models.TextField()
-    type = models.ForeignKey(Types,on_delete=models.CASCADE,blank=True,null=True)
+    type = models.ForeignKey(Typess,on_delete=models.CASCADE,blank=True,null=True)
     amount = models.FloatField()
     reciept = models.FileField(upload_to="upload")
     expense_date = models.DateField()

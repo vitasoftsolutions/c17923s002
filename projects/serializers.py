@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from projects.models import ProjectInfo, UnitModels, propertyModels
+from projects.models import ProjectInfo, UnitModels, WorkProgress, projectProgress, propertyModels
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -20,3 +20,15 @@ class UnitSerializer(serializers.ModelSerializer):
         model = UnitModels
         fields = '__all__'
         depth=1
+
+
+class projectProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = projectProgress
+        fields = '__all__'
+
+
+class WorkProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkProgress
+        fields = '__all__'
