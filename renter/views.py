@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from globalapp2.views import BaseBeneficaries, BaseViews
+from renter.filters import RenterBenificaiesFilter
 from renter.models import FlatRent, RentCollection, RenterBeneficaries, RepairRecords
 from renter.serializers import FRentCollectionSerializer, FlatRentSerializer, RenterBeneficariesSerializer, RepairRecordsSerializer
 from users.views import IsStaff,IsAdmin
@@ -12,7 +13,7 @@ from django_filters import rest_framework as django_filters
 class RenterBeneficariesViews(BaseBeneficaries):
     serializer_class = RenterBeneficariesSerializer
     queryset = RenterBeneficaries.objects.all()
-    #filterset_class = OwnerBenificaiesFilter
+    filterset_class = RenterBenificaiesFilter
     model_name = RenterBeneficaries
 
 class FlatRentViews(BaseViews):

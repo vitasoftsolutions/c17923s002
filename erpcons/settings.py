@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-#import dj_database_url
+import dj_database_url
 from datetime import timedelta
 #from decouple import config 
 HOST=False
@@ -104,12 +104,12 @@ WSGI_APPLICATION = 'erpcons.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 if HOST:
     DATABASES = {
         'default': {
@@ -121,9 +121,10 @@ if HOST:
             'PORT': '3306',
         }
     }
-# DATABASES = {
-#      'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-#  }
+
+DATABASES = {
+     'default': dj_database_url.parse("postgres://mtiqrlhf:A8NyDnd192cCQopPWOJR7eXbNYU9g7Zu@rain.db.elephantsql.com/mtiqrlhf")
+ }
 # DATABASES = {
 #      'default': config('DATABASE_URL', default='sqlite://db.sqlite3')
 #  }
