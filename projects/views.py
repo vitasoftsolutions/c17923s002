@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from globalapp2.views import BaseViews
-from projects.models import ProjectInfo, UnitModels, WorkProgress, projectProgress, propertyModels
-from projects.serializers import ProjectSerializer, PropertySerializer, UnitSerializer, WorkProgressSerializer, projectProgressSerializer
+from projects.models import ExpenseByProperty, ProjectInfo, UnitModels, WorkProgress, projectProgress, propertyInstallment, propertyModels, propertyPurchase
+from projects.serializers import ExpensedBypropertySerializer, ProjectSerializer, PropertyInstallmentSerializer, PropertyPurchaseSerializer, PropertySerializer, UnitSerializer, WorkProgressSerializer, projectProgressSerializer
 from users.views import IsStaff,IsAdmin
 from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
 from rest_framework import filters
@@ -60,6 +60,34 @@ class ProjectprogressViews(BaseViews):
     serializer_class = projectProgressSerializer
     queryset = projectProgress
     model_name=projectProgress
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = LoanInstallmentFilter # Use the custom filter class
+
+class PropertyPurchaseViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = PropertyPurchaseSerializer
+    queryset = propertyPurchase
+    model_name=propertyPurchase
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = LoanInstallmentFilter # Use the custom filter class
+class PropertyInstallmentViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = PropertyInstallmentSerializer
+    queryset = propertyInstallment
+    model_name=propertyInstallment
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
+    #filterset_class = LoanInstallmentFilter # Use the custom filter class
+class ExpensedbyPropertyViews(BaseViews):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated,IsStaff]
+    serializer_class = ExpensedBypropertySerializer
+    queryset = ExpenseByProperty
+    model_name=ExpenseByProperty
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, django_filters.DjangoFilterBackend]
     #filterset_class = LoanInstallmentFilter # Use the custom filter class

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from projects.models import ProjectInfo, UnitModels, WorkProgress, projectProgress, propertyModels
+from projects.models import ExpenseByProperty, ProjectInfo, UnitModels, WorkProgress, projectProgress, propertyInstallment, propertyModels, propertyPurchase
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -31,4 +31,19 @@ class projectProgressSerializer(serializers.ModelSerializer):
 class WorkProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkProgress
+        fields = '__all__'
+
+class PropertyPurchaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = propertyPurchase
+        fields = '__all__'
+
+class PropertyInstallmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = propertyInstallment
+        fields = '__all__'
+
+class ExpensedBypropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseByProperty
         fields = '__all__'

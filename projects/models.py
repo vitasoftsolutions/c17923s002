@@ -55,7 +55,7 @@ class propertyModels(CommonModel):
     side = models.CharField(max_length=50,null=True,blank=True)
     size = models.FloatField(null=True,blank=True)
     def __str__(self):
-        return f"{self.code }"
+        return f"{self.project_id.name} {self.code }"
 
 class UnitModels(CommonModel):
     project_id = models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,blank=True,null=True)
@@ -78,8 +78,8 @@ class UnitModels(CommonModel):
 
 
 class propertyPurchase(CommonModel):
-    project_id = models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,blank=True,null=True)
-    property_id = models.ForeignKey(propertyModels,on_delete=models.CASCADE,blank=True,null=True)
+    project_id = models.ManyToManyField(ProjectInfo)
+    property_id = models.ManyToManyField(propertyModels)
     customer_id = models.ForeignKey(CustomerBeneficaries,on_delete=models.CASCADE,blank=True,null=True)
     author_id = models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
     amount = models.FloatField()
@@ -88,12 +88,12 @@ class propertyPurchase(CommonModel):
     installment = models.IntegerField()
     facilities = models.JSONField()
     installment_duration = models.IntegerField()
-    final_return= models.DateField()
-    due_amount = models.FloatField()
-    due_installment = models.FloatField()
+    final_return= models.DateField(blank=True,null=True)
+    due_amount = models.FloatField(blank=True,null=True)
+    due_installment = models.FloatField(blank=True,null=True)
     handover_status = models.BooleanField()
     def __str__(self):
-        return f"{self.property_id.code }"
+        return f"{self.customer_id }"
 
 class propertyInstallment(CommonModel):
     purchase_id = models.ForeignKey(propertyPurchase,on_delete=models.CASCADE)
@@ -102,7 +102,7 @@ class propertyInstallment(CommonModel):
     project_id = models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,blank=True,null=True)
     property_id = models.ForeignKey(propertyModels,on_delete=models.CASCADE,blank=True,null=True)
     def __str__(self):
-        return f"{self.property_id.code }"
+        return f"{self.purchase_id }"
     
 class ExpenseByProperty(CommonModel):
     property_id = models.ForeignKey(propertyModels,on_delete=models.CASCADE,blank=True,null=True)

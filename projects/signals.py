@@ -2,8 +2,9 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from globalapp2.helper import number_to_alphabetic_order
 
-from projects.models import ProjectInfo, UnitModels, propertyModels
-
+from projects.models import ProjectInfo, UnitModels, propertyInstallment, propertyModels, propertyPurchase
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 @receiver(post_save, sender=ProjectInfo)
 def unit_flat_create(sender, instance, created, **kwargs):
@@ -12,7 +13,7 @@ def unit_flat_create(sender, instance, created, **kwargs):
         floor =instance.commarcial_floor+instance.residential_floor
         for i in range(1,floor+1):
             if i<=instance.commarcial_floor:
-                print("coomarcial floor")
+                print("comarcial floor")
                 unit = UnitModels.objects.create(
                     project_id = ProjectInfo.objects.get(id=instance.id),
                     unit_floor = i,
@@ -22,7 +23,7 @@ def unit_flat_create(sender, instance, created, **kwargs):
                 print(unit)
                 
             else:
-                print("coomarcial floor")
+                print("Ressidential floor")
                 unit=UnitModels.objects.create(
                     project_id = ProjectInfo.objects.get(id=instance.id),
                     unit_floor = i,
@@ -45,3 +46,24 @@ def unit_flat_create(sender, instance, created, **kwargs):
                 unit.save()
     else:
          print("not working")
+
+@receiver(post_save, sender=propertyPurchase)
+def property_purchase(sender, instance, created, **kwargs):
+    print(instance.installment_duration)
+    if created:
+        print("working")
+        instance.final_return = datetime.now()+relativedelta(months=instance.installment_duration)
+        instance.due_amount = instance.amount-instance.down_payment
+        instance.due_installment= instance.installment
+
+        instance.save()
+        # with transaction.atomic():
+        #     instance.save()
+
+@receiver(post_save, sender=propertyInstallment)
+def property_installment(sender, instance, created, **kwargs):
+    
+    objects = propertyPurchase.objects.get(id = instance.purchase_id.id)
+    objects.due_installment = objects.due_installment-1.0
+    objects.due_amount = objects.due_amount - instance.amount
+    objects.save()

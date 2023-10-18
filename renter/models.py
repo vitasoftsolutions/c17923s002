@@ -39,7 +39,7 @@ class RepairRecords(CommonModel):
     amount = models.FloatField()
     OPTION_a = 'Admin'
     OPTION_b = 'Renter'
-    
+     #enum('treu', 'false', 'leave')
     CHOICES2 = (
         (OPTION_a, 'Admin'),
         (OPTION_b, 'Renter'),
@@ -48,6 +48,7 @@ class RepairRecords(CommonModel):
     )
     
     expensed_by = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    #enum = models.enums
     def __str__(self):
         return f"{self.property_id.code }"
 
