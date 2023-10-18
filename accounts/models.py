@@ -17,8 +17,8 @@ class Income(CommonModel):
     reason = models.TextField()
     amount = models.FloatField()
     documents = models.FileField()
-    expenser_name = models.CharField(max_length=50)
-    expense_date = models.DateTimeField()
+    income_name = models.CharField(max_length=50)
+    income_date = models.DateTimeField()
     author_id = models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
     def __str__(self):
         return f"{self.reason}"
