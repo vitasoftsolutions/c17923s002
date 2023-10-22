@@ -258,6 +258,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class =CustomTokenObtainPairSerializer
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         print(response.data['access'])
