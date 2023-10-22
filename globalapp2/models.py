@@ -59,7 +59,7 @@ class Beneficaries(IntroInfo):
 
 class PhoneNumber(models.Model):
     #Beneficiaries = import_string('globalapp2.models.Beneficiaries')
-    OPTION_a = 'Contaractor'
+    OPTION_a = 'Contractor'
     OPTION_b = 'Suppliers'
     OPTION_c = 'Employee'
     OPTION_d = 'Land Owners'
@@ -68,7 +68,7 @@ class PhoneNumber(models.Model):
     #OPTION_g = 'Loan Beneficaries'
     
     PHONE_CHOICES2 = (
-        (OPTION_a, 'Contaractor'),
+        (OPTION_a, 'Contractor'),
         (OPTION_b, 'Suppliers'),
         (OPTION_c, 'Land Owners'),
         (OPTION_d, 'Employees'),
