@@ -161,7 +161,7 @@ class BaseBeneficaries(BaseViews):
                 relation= phone_number['relation'],
                 phone_number= phone_number['phone_number'],
                 status= True,
-                role= Beneficaries.objects.get(id=id),
+                role= phone_number['role'],
                 ben_id= Beneficaries.objects.get(id=id)
 
             )

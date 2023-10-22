@@ -37,6 +37,7 @@ if HOST:
 # Application definition
 
 INSTALLED_APPS = [
+    'wearhouse',
     'accounts',
     'renter',
     'projects',
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'django_filters',
+    'inventory',
 ]
 
 MIDDLEWARE = [
@@ -104,12 +106,12 @@ WSGI_APPLICATION = 'erpcons.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 if HOST:
     DATABASES = {
         'default': {
@@ -122,9 +124,9 @@ if HOST:
         }
     }
 
-DATABASES = {
-     'default': dj_database_url.parse("postgres://mtiqrlhf:A8NyDnd192cCQopPWOJR7eXbNYU9g7Zu@rain.db.elephantsql.com/mtiqrlhf")
- }
+# DATABASES = {
+#      'default': dj_database_url.parse("postgres://mtiqrlhf:A8NyDnd192cCQopPWOJR7eXbNYU9g7Zu@rain.db.elephantsql.com/mtiqrlhf")
+#  }
 # DATABASES = {
 #      'default': config('DATABASE_URL', default='sqlite://db.sqlite3')
 #  }

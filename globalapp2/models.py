@@ -59,7 +59,28 @@ class Beneficaries(IntroInfo):
 
 class PhoneNumber(models.Model):
     #Beneficiaries = import_string('globalapp2.models.Beneficiaries')
-    role = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='role',blank=True,null=True)
+    OPTION_a = 'Contaractor'
+    OPTION_b = 'Suppliers'
+    OPTION_c = 'Employee'
+    OPTION_d = 'Land Owners'
+    OPTION_e = 'Company Owners'
+    OPTION_f = 'Loan Beneficaries'
+    #OPTION_g = 'Loan Beneficaries'
+    
+    PHONE_CHOICES2 = (
+        (OPTION_a, 'Contaractor'),
+        (OPTION_b, 'Suppliers'),
+        (OPTION_c, 'Land Owners'),
+        (OPTION_d, 'Employees'),
+        (OPTION_e, 'Company Owners'),
+        (OPTION_f, 'Loan Beneficaries'),
+        #(OPTION_b, 'Loan Beneficaries'),
+        
+        
+    )
+    
+    #status = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    role = models.CharField(max_length=50, choices=PHONE_CHOICES2,blank=True,null=True)
     ben_id = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
     employee_role = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='role',blank=True,null=True)
     employee_id = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
