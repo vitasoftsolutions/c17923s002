@@ -37,6 +37,7 @@ if HOST:
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'wearhouse',
     'accounts',
     'renter',
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'inventory',
+    'inglobal',
 ]
 
 MIDDLEWARE = [

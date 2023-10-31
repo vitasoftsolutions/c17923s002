@@ -3,6 +3,7 @@ from datetime import datetime
 from django.utils.module_loading import import_string
 from django.core.validators import RegexValidator
 
+
 from users.models import Employee
 
 
@@ -112,4 +113,6 @@ class Typess(CommonModel):
     name = models.CharField(max_length=20)
     def __str__(self):
         return f"{self.name}"
+    
+
 

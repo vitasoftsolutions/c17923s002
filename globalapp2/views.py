@@ -19,6 +19,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import mixins
 from loan.filters import *
+import json
+from django.http import QueryDict
 # Create your views here.
 class BaseViews(viewsets.ModelViewSet):
     def get_queryset(self):
@@ -135,7 +137,14 @@ class BaseBeneficaries(BaseViews):
         serializer = self.get_serializer(data=request.data)
         test_data = self.get_serializer(data=request.data)
         #phone_numbers = serializer.initial_data.getlist('phone_number')
-        print(serializer.initial_data)
+        #json_data = json.dumps(serializer.initial_data)
+        #print(json_data)
+        # querydict_data = QueryDict(serializer.initial_data)
+        # data_dict = {}
+        # for key, value in querydict_data.items():
+        #     data_dict[key] = value
+        # #json_data = json.dumps(data_dict)
+        # print(querydict_data)
         try:
             phone_numbers = serializer.initial_data['phone_number']
             test_numbers="got number"
@@ -161,7 +170,7 @@ class BaseBeneficaries(BaseViews):
                 relation= phone_number['relation'],
                 phone_number= phone_number['phone_number'],
                 status= True,
-                role= phone_number['role'],
+                role= "",
                 ben_id= Beneficaries.objects.get(id=id)
 
             )

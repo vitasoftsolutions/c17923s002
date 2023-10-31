@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,Group
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,Group,PermissionsMixin
 from django.db import models
 from datetime import datetime
 
@@ -34,7 +34,7 @@ class MyUserManager(BaseUserManager):
 #     phone_number = models.CharField(max_length=15)
 #     def __str__(self):
 #         return f"{self.phone_number}"
-class Employee(AbstractBaseUser):
+class Employee(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -89,6 +89,14 @@ class Employee(AbstractBaseUser):
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
+    def get_all_permissions(self, obj=None):
+        # Define how to retrieve permissions here.
+        # You can use the roles assigned to the user to determine their permissions.
+        # For example, you can collect permissions from the associated groups.
+        permissions = set()
+        for role in self.roles.all():
+            permissions.update(role.permissions.all())
+        return permissions
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
         # Simplest possible answer: Yes, always
