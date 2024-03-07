@@ -1,0 +1,1 @@
+from erpcons.wsgi import application

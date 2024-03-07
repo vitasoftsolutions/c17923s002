@@ -1,0 +1,120 @@
+from django.db import models
+from datetime import datetime
+from django.utils.module_loading import import_string
+from django.core.validators import RegexValidator
+
+
+from users.models import Employee
+
+
+#from loan.models import LoanBeneficaries
+# Create your models here.
+class Common(models.Model):
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    
+    
+class IntroInfo(models.Model):
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        
+    )
+    first_name = models.CharField(max_length=100,blank=True,null=True)
+    last_name = models.CharField(max_length=100,blank=True,null=True)
+    author_id=models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
+    present_address = models.TextField()
+    permanent_address = models.TextField(null=True)
+    nid_number = models.CharField(
+        max_length=20,
+        validators=[
+            RegexValidator(
+                regex=r'^\d+$',  # Regular expression to match digits only
+                message='Only digits are allowed.',
+                code='invalid_digit'
+            ),        ]
+        )
+    nid_front = models.FileField(
+        upload_to="nid/",
+        verbose_name='NID Image (Front)',
+        null=True,
+        blank=True
+        )
+    nid_back = models.FileField(
+        upload_to="nid/",
+        verbose_name='NID Image (Back)',
+        null=True,
+        blank=True
+        )
+    profile_picture = models.ImageField(upload_to="profile/",null=True,blank=True)
+    
+    
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(blank=True,null=True,default=datetime.now())
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    def __str__(self):
+        return f"{self.first_name}"
+class Beneficaries(IntroInfo):
+    pass
+
+class PhoneNumber(models.Model):
+    #Beneficiaries = import_string('globalapp2.models.Beneficiaries')
+    OPTION_a = 'Contractor'
+    OPTION_b = 'Suppliers'
+    OPTION_c = 'Employee'
+    OPTION_d = 'Land Owners'
+    OPTION_e = 'Company Owners'
+    OPTION_f = 'Loan Beneficaries'
+    #OPTION_g = 'Loan Beneficaries'
+    
+    PHONE_CHOICES2 = (
+        (OPTION_a, 'Contractor'),
+        (OPTION_b, 'Suppliers'),
+        (OPTION_c, 'Land Owners'),
+        (OPTION_d, 'Employees'),
+        (OPTION_e, 'Company Owners'),
+        (OPTION_f, 'Loan Beneficaries'),
+        ("Unknown", "Unknown"),
+        #(OPTION_b, 'Loan Beneficaries'),
+        
+        
+    )
+    
+    #status = models.CharField(max_length=50, choices=CHOICES2,blank=True,null=True)
+    role = models.CharField(max_length=50, choices=PHONE_CHOICES2,default="Unknown")
+    ben_id = models.ForeignKey(Beneficaries,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
+    employee_role = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='role',blank=True,null=True)
+    employee_id = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='benid',blank=True,null=True)
+    first_name=models.CharField(max_length=100,blank=True,null=True)
+    last_name=models.CharField(max_length=100,blank=True,null=True)
+    relation= models.CharField(max_length=100,blank=True,null=True)
+    phone_number = models.CharField(max_length=15)
+    description=models.CharField(max_length=250,blank=True,null=True)
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+    def __str__(self):
+        return f"{self.phone_number}"
+    
+
+
+class CommonModel(models.Model):
+    status = models.BooleanField(default=True,null=True,blank=True)
+    created_at= models.DateTimeField(default=datetime.now(),blank=True,null=True)
+    is_deleted = models.BooleanField(default=False,null=True,blank=True)
+
+class AppLabels(CommonModel):
+    name = models.CharField(max_length=20)
+    def __str__(self):
+        return f"{self.name}"
+    
+
+class Typess(CommonModel):
+    app_label = models.ForeignKey(AppLabels,on_delete=models.CASCADE,related_name='type_label',blank=True,null=True)
+    name = models.CharField(max_length=20)
+    def __str__(self):
+        return f"{self.name}"
+    
+
+

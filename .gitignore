@@ -1,0 +1,6 @@
+db.sqlite3
+db_old.sqlite3
+erpcons.zip
+hrm/migrations
+users/migrations
+globalapp2/migrations
